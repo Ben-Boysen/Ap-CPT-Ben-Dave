@@ -1,9 +1,41 @@
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
+    if (controller.A.isPressed()) {
+        tiles.setTileAt(location, sprites.dungeon.darkGroundCenter)
+        redBallItem = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 4 4 4 4 . . . . . . 
+            . . . . 4 4 4 5 5 4 4 4 . . . . 
+            . . . 3 3 3 3 4 4 4 4 4 4 . . . 
+            . . 4 3 3 3 3 2 2 2 1 1 4 4 . . 
+            . . 3 3 3 3 3 2 2 2 1 1 5 4 . . 
+            . 4 3 3 3 3 2 2 2 2 2 5 5 4 4 . 
+            . 4 3 3 3 2 2 2 4 4 4 4 5 4 4 . 
+            . 4 4 3 3 2 2 4 4 4 4 4 4 4 4 . 
+            . 4 2 3 3 2 2 4 4 4 4 4 4 4 4 . 
+            . . 4 2 3 3 2 4 4 4 4 4 2 4 . . 
+            . . 4 2 2 3 2 2 4 4 4 2 4 4 . . 
+            . . . 4 2 2 2 2 2 2 2 2 4 . . . 
+            . . . . 4 4 2 2 2 2 4 4 . . . . 
+            . . . . . . 4 4 4 4 . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.Player)
+        scaling.scaleByPercent(redBallItem, -50, ScaleDirection.Uniformly, ScaleAnchor.Middle)
+    }
+})
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
     tiles.setTileAt(location, assets.tile`openChest`)
     info.changeScoreBy(1)
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
 })
-let mySprite = sprites.create(img`
+function PlayerHold (Sprite2: Sprite) {
+    Sprite2.setPosition(player1.x + 10, player1.y)
+    heldItem = Sprite2
+    controller.moveSprite(heldItem)
+}
+let heldItem: Sprite = null
+let redBallItem: Sprite = null
+let player1: Sprite = null
+player1 = sprites.create(img`
     . . . . f f f f . . . . . 
     . . f f f f f f f f . . . 
     . f f f f f f c f f f . . 
@@ -21,7 +53,28 @@ let mySprite = sprites.create(img`
     . . . f f f f f f . . . . 
     . . . f f . . f f . . . . 
     `, SpriteKind.Player)
-controller.moveSprite(mySprite)
-scene.cameraFollowSprite(mySprite)
-tiles.setCurrentTilemap(tilemap`level2`)
+controller.moveSprite(player1)
+let Tilemap = tilemap`level2`
+scene.cameraFollowSprite(player1)
+tiles.setCurrentTilemap(tilemap`level6`)
+let Sword = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . f f f . . 
+    . . . . . . . . . . f 9 f f . . 
+    . . . . . . . . . f 9 6 9 f . . 
+    . . . . . . . . f 9 6 9 f . . . 
+    . . . . . . . f 9 6 9 f . . . . 
+    . . . . . . f 9 6 9 f . . . . . 
+    . . . . . f 9 6 9 f . . . . . . 
+    . f f . f 9 6 9 f . . . . . . . 
+    . . f f 9 6 9 f . . . . . . . . 
+    . . . f f 9 f . . . . . . . . . 
+    . . f f f f . . . . . . . . . . 
+    . f f f . f f . . . . . . . . . 
+    . f f . . . f . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Player)
 info.setScore(0)
+PlayerHold(Sword)
+let PlayerState = "Walking"
