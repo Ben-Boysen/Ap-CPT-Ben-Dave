@@ -1,4 +1,8 @@
-tiles.setCurrentTilemap(tilemap`level1`)
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
+    tiles.setTileAt(location, assets.tile`openChest`)
+    info.changeScoreBy(1)
+    music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
+})
 let mySprite = sprites.create(img`
     . . . . f f f f . . . . . 
     . . f f f f f f f f . . . 
@@ -19,3 +23,5 @@ let mySprite = sprites.create(img`
     `, SpriteKind.Player)
 controller.moveSprite(mySprite)
 scene.cameraFollowSprite(mySprite)
+tiles.setCurrentTilemap(tilemap`level2`)
+info.setScore(0)
