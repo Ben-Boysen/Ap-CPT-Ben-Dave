@@ -22,6 +22,12 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, l
         scaling.scaleByPercent(redBallItem, -50, ScaleDirection.Uniformly, ScaleAnchor.Middle)
     }
 })
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorClosedEast, function (sprite, location) {
+    if (stage == 1) {
+        tiles.setCurrentTilemap(tilemapList[1])
+        tiles.placeOnTile(player1, tiles.getTileLocation(1, 8))
+    }
+})
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
     tiles.setTileAt(location, assets.tile`openChest`)
     info.changeScoreBy(1)
@@ -32,9 +38,18 @@ function PlayerHold (Sprite2: Sprite) {
     heldItem = Sprite2
     controller.moveSprite(heldItem)
 }
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenWest, function (sprite, location) {
+    if (stage == 1) {
+        tiles.setCurrentTilemap(tilemapList[0])
+        tiles.placeOnTile(player1, tiles.getTileLocation(14, 8))
+    }
+})
 let heldItem: Sprite = null
 let redBallItem: Sprite = null
+let tilemapList: tiles.TileMapData[] = []
 let player1: Sprite = null
+let stage = 0
+stage = 1
 player1 = sprites.create(img`
     . . . . f f f f . . . . . 
     . . f f f f f f f f . . . 
@@ -54,9 +69,10 @@ player1 = sprites.create(img`
     . . . f f . . f f . . . . 
     `, SpriteKind.Player)
 controller.moveSprite(player1)
+tilemapList = [tilemap`level12`, tilemap`level10`]
 let Tilemap = tilemap`level2`
 scene.cameraFollowSprite(player1)
-tiles.setCurrentTilemap(tilemap`level6`)
+tiles.setCurrentTilemap(tilemap`level12`)
 let Sword = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
