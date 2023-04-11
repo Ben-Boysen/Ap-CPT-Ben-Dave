@@ -50,6 +50,19 @@ function ItemHold () {
         Stopped = false
     }
 }
+function HeldItemControllerY () {
+    if (player1.vy == 0) {
+        heldItem.setPosition(player1.x + 10, player1.y)
+        StoppedY = true
+        return 0
+    } else {
+        if (StoppedY) {
+            heldItem.setPosition(player1.x + 10, player1.y)
+        }
+        StoppedY = false
+        return 100
+    }
+}
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenWest, function (sprite, location) {
     if (stage == 1) {
         tiles.setCurrentTilemap(tilemapList[0])
@@ -58,6 +71,22 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenWest, function (s
     }
     heldItem.setPosition(player1.x + 10, player1.y)
 })
+function HeldItemControllerX () {
+    if (player1.vx == 0) {
+        heldItem.setPosition(player1.x + 10, player1.y)
+        Stopped = true
+        return 0
+    } else {
+        if (Stopped) {
+            heldItem.setPosition(player1.x + 10, player1.y)
+        }
+        Stopped = false
+        return 100
+    }
+}
+let LastAButton = false
+let ListOfItems: Sprite[] = []
+let StoppedY = false
 let Stopped = false
 let heldItem: Sprite = null
 let None: Sprite = null
@@ -147,5 +176,14 @@ info.setScore(0)
 PlayerHold(Sword)
 let PlayerState = "Walking"
 game.onUpdate(function () {
-    ItemHold()
+    controller.moveSprite(heldItem, HeldItemControllerX(), HeldItemControllerY())
+    ListOfItems = sprites.allOfKind(SpriteKind.Item)
+    for (let value of ListOfItems) {
+        if (player1.overlapsWith(value) && value != heldItem) {
+            if (!(LastAButton) && controller.A.isPressed()) {
+                PlayerHold(value)
+            }
+        }
+    }
+    LastAButton = controller.A.isPressed()
 })
