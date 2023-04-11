@@ -1,3 +1,6 @@
+namespace SpriteKind {
+    export const Item = SpriteKind.create()
+}
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorClosedEast, function (sprite, location) {
     if (stage == 1) {
         tiles.setCurrentTilemap(tilemapList[1])
@@ -5,15 +8,37 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorClosedEast, function 
     }
     heldItem.setPosition(player1.x + 10, player1.y)
 })
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    PlayerDrop(heldItem)
+})
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
     tiles.setTileAt(location, assets.tile`openChest`)
     info.changeScoreBy(1)
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
 })
 function PlayerHold (Sprite2: Sprite) {
+    PlayerDrop(heldItem)
     Sprite2.setPosition(player1.x + 10, player1.y)
     heldItem = Sprite2
     heldItem.setFlag(SpriteFlag.GhostThroughWalls, true)
+}
+function PlayerDrop (Sprite2: Sprite) {
+    heldItem = None
+    controller.moveSprite(Sprite2, 0, 0)
+    Sprite2.setFlag(SpriteFlag.GhostThroughWalls, false)
+}
+function ItemHold () {
+    if (player1.vx == 0) {
+        controller.moveSprite(heldItem, 0, 0)
+        heldItem.setPosition(player1.x + 10, player1.y)
+        Stopped = true
+    } else {
+        if (Stopped) {
+            heldItem.setPosition(player1.x + 10, player1.y)
+        }
+        controller.moveSprite(heldItem)
+        Stopped = false
+    }
 }
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenWest, function (sprite, location) {
     if (stage == 1) {
@@ -24,6 +49,7 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenWest, function (s
 })
 let Stopped = false
 let heldItem: Sprite = null
+let None: Sprite = null
 let tilemapList: tiles.TileMapData[] = []
 let player1: Sprite = null
 let stage = 0
@@ -68,10 +94,26 @@ let Sword = sprites.create(img`
     . f f f . f f . . . . . . . . . 
     . f f . . . f . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
-    `, SpriteKind.Player)
-info.setScore(0)
-PlayerHold(Sword)
-let PlayerState = "Walking"
+    `, SpriteKind.Item)
+None = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Item)
+heldItem = None
 let redBallItem = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . 4 4 4 4 . . . . . . 
@@ -89,17 +131,10 @@ let redBallItem = sprites.create(img`
     . . . . 4 4 2 2 2 2 4 4 . . . . 
     . . . . . . 4 4 4 4 . . . . . . 
     . . . . . . . . . . . . . . . . 
-    `, SpriteKind.Player)
+    `, SpriteKind.Item)
+info.setScore(0)
+PlayerHold(Sword)
+let PlayerState = "Walking"
 game.onUpdate(function () {
-    if (player1.vx == 0) {
-        controller.moveSprite(heldItem, 0, 0)
-        heldItem.setPosition(player1.x + 10, player1.y)
-        Stopped = true
-    } else {
-        if (Stopped) {
-            heldItem.setPosition(player1.x + 10, player1.y)
-        }
-        controller.moveSprite(heldItem)
-        Stopped = false
-    }
+    ItemHold()
 })
