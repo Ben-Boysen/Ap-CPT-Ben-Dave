@@ -2,7 +2,8 @@ namespace SpriteKind {
     export const Item = SpriteKind.create()
 }
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorClosedEast, function (sprite, location) {
-    if (stage == 1) {
+    if (stage == 1 && info.score() >= 1) {
+        info.changeScoreBy(-1)
         tiles.setCurrentTilemap(tilemapList[1])
         tiles.placeOnTile(player1, tiles.getTileLocation(1, 8))
     }
@@ -12,9 +13,11 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     PlayerDrop(heldItem)
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
-    tiles.setTileAt(location, assets.tile`openChest`)
-    info.changeScoreBy(1)
-    music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
+    if (controller.A.isPressed()) {
+        tiles.setTileAt(location, assets.tile`openChest`)
+        info.changeScoreBy(1)
+        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
+    }
 })
 function PlayerHold (Sprite2: Sprite) {
     PlayerDrop(heldItem)
@@ -22,6 +25,13 @@ function PlayerHold (Sprite2: Sprite) {
     heldItem = Sprite2
     heldItem.setFlag(SpriteFlag.GhostThroughWalls, true)
 }
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenEast, function (sprite, location) {
+    if (stage == 1) {
+        tiles.setCurrentTilemap(tilemapList[1])
+        tiles.placeOnTile(player1, tiles.getTileLocation(1, 8))
+    }
+    heldItem.setPosition(player1.x + 10, player1.y)
+})
 function PlayerDrop (Sprite2: Sprite) {
     heldItem = None
     controller.moveSprite(Sprite2, 0, 0)
@@ -44,6 +54,7 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenWest, function (s
     if (stage == 1) {
         tiles.setCurrentTilemap(tilemapList[0])
         tiles.placeOnTile(player1, tiles.getTileLocation(14, 8))
+        tiles.setTileAt(tiles.getTileLocation(15, 8), sprites.dungeon.doorOpenEast)
     }
     heldItem.setPosition(player1.x + 10, player1.y)
 })
