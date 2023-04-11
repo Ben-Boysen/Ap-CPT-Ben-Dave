@@ -160,7 +160,6 @@ let redBallItem = sprites.create(img`
     `, SpriteKind.Item)
 info.setScore(0)
 PlayerHold(Sword)
-let PlayerState = "Walking"
 let LastAButton = false
 game.onUpdate(function () {
     controller.moveSprite(heldItem, HeldItemControllerX(), HeldItemControllerY())
