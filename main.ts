@@ -37,17 +37,17 @@ function PlayerDrop (Sprite2: Sprite) {
     controller.moveSprite(Sprite2, 0, 0)
     Sprite2.setFlag(SpriteFlag.GhostThroughWalls, false)
 }
-function HeldItemControllerY () {
-    if (player1.vy == 0) {
+function ItemHold () {
+    if (player1.vx == 0) {
+        controller.moveSprite(heldItem, 0, 0)
         heldItem.setPosition(player1.x + 10, player1.y)
-        StoppedY = true
-        return 0
+        Stopped = true
     } else {
-        if (StoppedY) {
+        if (Stopped) {
             heldItem.setPosition(player1.x + 10, player1.y)
         }
-        StoppedY = false
-        return 100
+        controller.moveSprite(heldItem)
+        Stopped = false
     }
 }
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenWest, function (sprite, location) {
@@ -58,22 +58,7 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenWest, function (s
     }
     heldItem.setPosition(player1.x + 10, player1.y)
 })
-function HeldItemControllerX () {
-    if (player1.vx == 0) {
-        heldItem.setPosition(player1.x + 10, player1.y)
-        Stopped = true
-        return 0
-    } else {
-        if (Stopped) {
-            heldItem.setPosition(player1.x + 10, player1.y)
-        }
-        Stopped = false
-        return 100
-    }
-}
-let ListOfItems: Sprite[] = []
 let Stopped = false
-let StoppedY = false
 let heldItem: Sprite = null
 let None: Sprite = null
 let tilemapList: tiles.TileMapData[] = []
@@ -160,16 +145,7 @@ let redBallItem = sprites.create(img`
     `, SpriteKind.Item)
 info.setScore(0)
 PlayerHold(Sword)
-let LastAButton = false
+let PlayerState = "Walking"
 game.onUpdate(function () {
-    controller.moveSprite(heldItem, HeldItemControllerX(), HeldItemControllerY())
-    ListOfItems = sprites.allOfKind(SpriteKind.Item)
-    for (let value of ListOfItems) {
-        if (player1.overlapsWith(value) && value != heldItem) {
-            if (!(LastAButton) && controller.A.isPressed()) {
-                PlayerHold(value)
-            }
-        }
-    }
-    LastAButton = controller.A.isPressed()
+    ItemHold()
 })
