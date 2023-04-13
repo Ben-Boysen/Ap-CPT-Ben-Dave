@@ -1,6 +1,16 @@
 namespace SpriteKind {
     export const Item = SpriteKind.create()
 }
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
+    if (controller.A.isPressed()) {
+        PlayerHold(greenBallItem)
+    }
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
+    if (controller.A.isPressed()) {
+        PlayerHold(redBallItem)
+    }
+})
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorClosedEast, function (sprite, location) {
     if (stage == 1 && info.score() >= 1) {
         info.changeScoreBy(-1)
@@ -8,6 +18,12 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorClosedEast, function 
         tiles.placeOnTile(player1, tiles.getTileLocation(1, 8))
     }
     heldItem.setPosition(player1.x + 10, player1.y)
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`redBallOnPortal`, function (sprite, location) {
+    if (controller.A.isPressed()) {
+        tiles.setTileAt(location, sprites.dungeon.collectibleInsignia)
+        PlayerHold(redBallItem)
+    }
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     PlayerDrop(heldItem)
@@ -25,6 +41,67 @@ function PlayerHold (Sprite2: Sprite) {
     heldItem = Sprite2
     heldItem.setFlag(SpriteFlag.GhostThroughWalls, true)
 }
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (heldItem == Sword) {
+        animation.runImageAnimation(
+        Sword,
+        [img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . f f f . . 
+            . . . . . . . . . . f 9 f f . . 
+            . . . . . . . . . f 9 6 9 f . . 
+            . . . . . . . . f 9 6 9 f . . . 
+            . . . . . . . f 9 6 9 f . . . . 
+            . . . . . . f 9 6 9 f . . . . . 
+            . . . . . f 9 6 9 f . . . . . . 
+            . f f . f 9 6 9 f . . . . . . . 
+            . . f f 9 6 9 f . . . . . . . . 
+            . . . f f 9 f . . . . . . . . . 
+            . . f f f f . . . . . . . . . . 
+            . f f f . f f . . . . . . . . . 
+            . f f . . . f . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . f f . . . f . . . . . . . . . 
+            . f f f . f f . . . . . . . . . 
+            . . f f f f . . . . . . . . . . 
+            . . . f f 9 f . . . . . . . . . 
+            . . f f 9 6 9 f . . . . . . . . 
+            . f f . f 9 6 9 f . . . . . . . 
+            . . . . . f 9 6 9 f . . . . . . 
+            . . . . . . f 9 6 9 f . . . . . 
+            . . . . . . . f 9 6 9 f . . . . 
+            . . . . . . . . f 9 6 9 f . . . 
+            . . . . . . . . . f 9 6 9 f . . 
+            . . . . . . . . . . f 9 f f . . 
+            . . . . . . . . . . . f f f . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . f f f . . 
+            . . . . . . . . . . f 9 f f . . 
+            . . . . . . . . . f 9 6 9 f . . 
+            . . . . . . . . f 9 6 9 f . . . 
+            . . . . . . . f 9 6 9 f . . . . 
+            . . . . . . f 9 6 9 f . . . . . 
+            . . . . . f 9 6 9 f . . . . . . 
+            . f f . f 9 6 9 f . . . . . . . 
+            . . f f 9 6 9 f . . . . . . . . 
+            . . . f f 9 f . . . . . . . . . 
+            . . f f f f . . . . . . . . . . 
+            . f f f . f f . . . . . . . . . 
+            . f f . . . f . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `],
+        100,
+        false
+        )
+    }
+})
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenEast, function (sprite, location) {
     if (stage == 1) {
         tiles.setCurrentTilemap(tilemapList[1])
@@ -50,6 +127,12 @@ function ItemHold () {
         Stopped = false
     }
 }
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile5`, function (sprite, location) {
+    if (controller.A.isPressed()) {
+        tiles.setTileAt(location, sprites.dungeon.collectibleInsignia)
+        PlayerHold(greenBallItem)
+    }
+})
 function HeldItemControllerY () {
     if (player1.vy == 0) {
         heldItem.setPosition(player1.x + 10, player1.y)
@@ -84,12 +167,25 @@ function HeldItemControllerX () {
         return 100
     }
 }
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.collectibleInsignia, function (sprite, location) {
+    if (heldItem == redBallItem && controller.A.isPressed()) {
+        tiles.setTileAt(location, assets.tile`redBallOnPortal`)
+        PlayerDrop(redBallItem)
+    }
+    if (heldItem == greenBallItem && controller.A.isPressed()) {
+        tiles.setTileAt(location, assets.tile`myTile5`)
+        PlayerDrop(greenBallItem)
+    }
+})
 let LastAButton = false
 let ListOfItems: Sprite[] = []
 let StoppedY = false
 let Stopped = false
+let greenBallItem: Sprite = null
+let redBallItem: Sprite = null
 let heldItem: Sprite = null
 let None: Sprite = null
+let Sword: Sprite = null
 let tilemapList: tiles.TileMapData[] = []
 let player1: Sprite = null
 let stage = 0
@@ -117,7 +213,7 @@ tilemapList = [tilemap`level12`, tilemap`level10`]
 let Tilemap = tilemap`level2`
 scene.cameraFollowSprite(player1)
 tiles.setCurrentTilemap(tilemap`level12`)
-let Sword = sprites.create(img`
+Sword = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . f f f . . 
@@ -154,7 +250,7 @@ None = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Item)
 heldItem = None
-let redBallItem = sprites.create(img`
+redBallItem = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . 4 4 4 4 . . . . . . 
     . . . . 4 4 4 5 5 4 4 4 . . . . 
@@ -170,6 +266,24 @@ let redBallItem = sprites.create(img`
     . . . 4 2 2 2 2 2 2 2 2 4 . . . 
     . . . . 4 4 2 2 2 2 4 4 . . . . 
     . . . . . . 4 4 4 4 . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Item)
+greenBallItem = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . 6 6 6 6 . . . . . . 
+    . . . . 6 6 6 7 7 6 6 6 . . . . 
+    . . . 7 7 7 7 6 6 6 6 6 6 . . . 
+    . . 6 7 7 7 7 8 8 8 1 1 6 6 . . 
+    . . 7 7 7 7 7 8 8 8 1 1 8 6 . . 
+    . 6 7 7 7 7 8 8 8 8 8 8 8 6 6 . 
+    . 6 7 7 7 8 8 8 6 6 6 6 8 6 6 . 
+    . 6 6 7 7 8 8 6 6 6 6 6 6 6 6 . 
+    . 6 8 7 7 8 8 6 6 6 6 6 6 6 6 . 
+    . . 6 8 7 7 8 6 6 6 6 6 8 6 . . 
+    . . 6 8 8 7 8 8 6 6 6 8 6 6 . . 
+    . . . 6 8 8 8 8 8 8 8 8 6 . . . 
+    . . . . 6 6 8 8 8 8 6 6 . . . . 
+    . . . . . . 6 6 6 6 . . . . . . 
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Item)
 info.setScore(0)
