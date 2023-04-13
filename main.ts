@@ -1,6 +1,37 @@
 namespace SpriteKind {
     export const Item = SpriteKind.create()
 }
+function Make_Enemy (num: number) {
+    for (let index = 0; index < num; index++) {
+        Ghost = sprites.create(img`
+            ........................
+            ........................
+            ........................
+            ........................
+            ..........ffff..........
+            ........ff1111ff........
+            .......fb111111bf.......
+            .......f11111111f.......
+            ......fd11111111df......
+            ......fd11111111df......
+            ......fddd1111dddf......
+            ......fbdbfddfbdbf......
+            ......fcdcf11fcdcf......
+            .......fb111111bf.......
+            ......fffcdb1bdffff.....
+            ....fc111cbfbfc111cf....
+            ....f1b1b1ffff1b1b1f....
+            ....fbfbffffffbfbfbf....
+            .........ffffff.........
+            ...........fff..........
+            ........................
+            ........................
+            ........................
+            ........................
+            `, SpriteKind.Enemy)
+        tiles.placeOnRandomTile(Ghost, sprites.dungeon.darkGroundCenter)
+    }
+}
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorClosedEast, function (sprite, location) {
     if (stage == 1 && info.score() >= 1) {
         info.changeScoreBy(-1)
@@ -25,12 +56,21 @@ function PlayerHold (Sprite2: Sprite) {
     heldItem = Sprite2
     heldItem.setFlag(SpriteFlag.GhostThroughWalls, true)
 }
+function Enemy_Following (Enemy: Sprite) {
+    Enemy.follow(player1, 75)
+    if (Enemy.overlapsWith(player1)) {
+        Enemy.follow(player1, 0)
+    }
+}
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenEast, function (sprite, location) {
     if (stage == 1) {
         tiles.setCurrentTilemap(tilemapList[1])
         tiles.placeOnTile(player1, tiles.getTileLocation(1, 8))
     }
     heldItem.setPosition(player1.x + 10, player1.y)
+})
+sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Enemy, function (sprite, otherSprite) {
+    sprite.setVelocity(0, 0)
 })
 function PlayerDrop (Sprite2: Sprite) {
     heldItem = None
@@ -84,10 +124,12 @@ function HeldItemControllerX () {
         return 100
     }
 }
+let ListOfEnemies: Sprite[] = []
 let LastAButton = false
 let ListOfItems: Sprite[] = []
 let StoppedY = false
 let Stopped = false
+let Ghost: Sprite = null
 let heldItem: Sprite = null
 let None: Sprite = null
 let tilemapList: tiles.TileMapData[] = []
@@ -186,4 +228,8 @@ game.onUpdate(function () {
         }
     }
     LastAButton = controller.A.isPressed()
+    ListOfEnemies = sprites.allOfKind(SpriteKind.Enemy)
+    for (let value of ListOfEnemies) {
+        Enemy_Following(value)
+    }
 })
