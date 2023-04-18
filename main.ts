@@ -291,6 +291,9 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenEast, function (s
     }
     heldItem.setPosition(player1.x + 10, player1.y)
 })
+statusbars.onStatusReached(StatusBarKind.Health, statusbars.StatusComparison.LTE, statusbars.ComparisonType.Percentage, 50, function (status) {
+    status.setColor(5, 2)
+})
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Enemy, function (sprite, otherSprite) {
     sprite.setVelocity(0, 0)
 })
@@ -299,6 +302,12 @@ function PlayerDrop (Sprite2: Sprite) {
     controller.moveSprite(Sprite2, 0, 0)
     Sprite2.setFlag(SpriteFlag.GhostThroughWalls, false)
 }
+statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
+    sprites.destroy(status.spriteAttachedTo())
+})
+statusbars.onZero(StatusBarKind.Health, function (status) {
+    game.gameOver(false)
+})
 function ItemHold () {
     if (player1.vx == 0) {
         controller.moveSprite(heldItem, 0, 0)
@@ -464,9 +473,6 @@ game.onUpdate(function () {
     LastAButton = controller.A.isPressed()
     ListOfEnemies = sprites.allOfKind(SpriteKind.Enemy)
     for (let value2 of ListOfEnemies) {
-        if (statusbars.getStatusBarAttachedTo(StatusBarKind.EnemyHealth, value2).value <= 0) {
-            sprites.destroy(value2)
-        }
         Enemy_Following(value2)
     }
 })
