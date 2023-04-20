@@ -1,16 +1,112 @@
 namespace SpriteKind {
     export const Item = SpriteKind.create()
 }
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
+    if (controller.A.isPressed()) {
+        greenBallItem = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 6 6 6 6 . . . . . . 
+            . . . . 6 6 6 5 5 6 6 6 . . . . 
+            . . . 7 7 7 7 6 6 6 6 6 6 . . . 
+            . . 6 7 7 7 7 8 8 8 1 1 6 6 . . 
+            . . 7 7 7 7 7 8 8 8 1 1 5 6 . . 
+            . 6 7 7 7 7 8 8 8 8 8 5 5 6 6 . 
+            . 6 7 7 7 8 8 8 6 6 6 6 5 6 6 . 
+            . 6 6 7 7 8 8 6 6 6 6 6 6 6 6 . 
+            . 6 8 7 7 8 8 6 6 6 6 6 6 6 6 . 
+            . . 6 8 7 7 8 6 6 6 6 6 8 6 . . 
+            . . 6 8 8 7 8 8 6 6 6 8 6 6 . . 
+            . . . 6 8 8 8 8 8 8 8 8 6 . . . 
+            . . . . 6 6 8 8 8 8 6 6 . . . . 
+            . . . . . . 6 6 6 6 . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.Item)
+        PlayerHold(greenBallItem)
+        tiles.setTileAt(location, assets.tile`myTile6`)
+    }
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
+    if (controller.A.isPressed()) {
+        redBallItem = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 4 4 4 4 . . . . . . 
+            . . . . 4 4 4 5 5 4 4 4 . . . . 
+            . . . 3 3 3 3 4 4 4 4 4 4 . . . 
+            . . 4 3 3 3 3 2 2 2 1 1 4 4 . . 
+            . . 3 3 3 3 3 2 2 2 1 1 5 4 . . 
+            . 4 3 3 3 3 2 2 2 2 2 5 5 4 4 . 
+            . 4 3 3 3 2 2 2 4 4 4 4 5 4 4 . 
+            . 4 4 3 3 2 2 4 4 4 4 4 4 4 4 . 
+            . 4 2 3 3 2 2 4 4 4 4 4 4 4 4 . 
+            . . 4 2 3 3 2 4 4 4 4 4 2 4 . . 
+            . . 4 2 2 3 2 2 4 4 4 2 4 4 . . 
+            . . . 4 2 2 2 2 2 2 2 2 4 . . . 
+            . . . . 4 4 2 2 2 2 4 4 . . . . 
+            . . . . . . 4 4 4 4 . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.Item)
+        PlayerHold(redBallItem)
+        tiles.setTileAt(location, assets.tile`myTile4`)
+    }
+})
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorClosedEast, function (sprite, location) {
     if (stage == 1 && info.score() >= 1) {
         info.changeScoreBy(-1)
         tiles.setCurrentTilemap(tilemapList[1])
         tiles.placeOnTile(player1, tiles.getTileLocation(1, 8))
     }
+    if (stage == 2 && info.score() >= 1) {
+        info.changeScoreBy(-1)
+        tiles.setCurrentTilemap(tilemapList[2])
+        tiles.placeOnTile(player1, tiles.getTileLocation(1, 8))
+    }
+    if (stage == 3 && info.score() >= 1) {
+        info.changeScoreBy(-1)
+        tiles.setCurrentTilemap(tilemapList[3])
+        tiles.placeOnTile(player1, tiles.getTileLocation(1, 8))
+        Make_Enemy(8)
+    }
     heldItem.setPosition(player1.x + 10, player1.y)
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`redBallOnPortal`, function (sprite, location) {
+    if (heldItem != redBallItem && controller.A.isPressed()) {
+        redBallItem = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 4 4 4 4 . . . . . . 
+            . . . . 4 4 4 5 5 4 4 4 . . . . 
+            . . . 3 3 3 3 4 4 4 4 4 4 . . . 
+            . . 4 3 3 3 3 2 2 2 1 1 4 4 . . 
+            . . 3 3 3 3 3 2 2 2 1 1 5 4 . . 
+            . 4 3 3 3 3 2 2 2 2 2 5 5 4 4 . 
+            . 4 3 3 3 2 2 2 4 4 4 4 5 4 4 . 
+            . 4 4 3 3 2 2 4 4 4 4 4 4 4 4 . 
+            . 4 2 3 3 2 2 4 4 4 4 4 4 4 4 . 
+            . . 4 2 3 3 2 4 4 4 4 4 2 4 . . 
+            . . 4 2 2 3 2 2 4 4 4 2 4 4 . . 
+            . . . 4 2 2 2 2 2 2 2 2 4 . . . 
+            . . . . 4 4 2 2 2 2 4 4 . . . . 
+            . . . . . . 4 4 4 4 . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.Item)
+        tiles.setTileAt(location, sprites.dungeon.collectibleInsignia)
+        PlayerHold(redBallItem)
+    }
+})
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    PlayerDrop(heldItem)
+    if (player1.tileKindAt(TileDirection.Center, sprites.dungeon.collectibleInsignia)) {
+        if (heldItem == redBallItem) {
+            tiles.setTileAt(player1.tilemapLocation(), assets.tile`redBallOnPortal`)
+            PlayerHold(None)
+            sprites.destroy(redBallItem)
+        }
+        if (heldItem == greenBallItem) {
+            tiles.setTileAt(player1.tilemapLocation(), assets.tile`myTile5`)
+            PlayerHold(None)
+            sprites.destroy(greenBallItem)
+        }
+    } else {
+        PlayerDrop(heldItem)
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
     if (controller.A.isPressed()) {
@@ -291,8 +387,17 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.doorOpenEast, function (s
     }
     heldItem.setPosition(player1.x + 10, player1.y)
 })
-statusbars.onStatusReached(StatusBarKind.Health, statusbars.StatusComparison.LTE, statusbars.ComparisonType.Percentage, 50, function (status) {
-    status.setColor(5, 2)
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile9`, function (sprite, location) {
+    if (controller.A.isPressed()) {
+        if (stage == 2) {
+            if (tiles.tileAtLocationEquals(tiles.getTileLocation(12, 11), assets.tile`myTile5`) && (tiles.tileAtLocationEquals(tiles.getTileLocation(9, 5), assets.tile`myTile5`) && (tiles.tileAtLocationEquals(tiles.getTileLocation(6, 5), assets.tile`myTile5`) && tiles.tileAtLocationEquals(tiles.getTileLocation(3, 11), assets.tile`myTile5`)))) {
+                music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
+                stage = 3
+                info.setScore(1)
+                tiles.setWallAt(tiles.getTileLocation(15, 8), false)
+            }
+        }
+    }
 })
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Enemy, function (sprite, otherSprite) {
     sprite.setVelocity(0, 0)
@@ -302,12 +407,6 @@ function PlayerDrop (Sprite2: Sprite) {
     controller.moveSprite(Sprite2, 0, 0)
     Sprite2.setFlag(SpriteFlag.GhostThroughWalls, false)
 }
-statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
-    sprites.destroy(status.spriteAttachedTo())
-})
-statusbars.onZero(StatusBarKind.Health, function (status) {
-    game.gameOver(false)
-})
 function ItemHold () {
     if (player1.vx == 0) {
         controller.moveSprite(heldItem, 0, 0)
@@ -321,6 +420,45 @@ function ItemHold () {
         Stopped = false
     }
 }
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile8`, function (sprite, location) {
+    if (controller.A.isPressed()) {
+        if (stage == 1) {
+            if (tiles.tileAtLocationEquals(tiles.getTileLocation(8, 7), assets.tile`redBallOnPortal`) && (tiles.tileAtLocationEquals(tiles.getTileLocation(7, 8), assets.tile`redBallOnPortal`) && (tiles.tileAtLocationEquals(tiles.getTileLocation(7, 7), assets.tile`myTile5`) && tiles.tileAtLocationEquals(tiles.getTileLocation(8, 8), assets.tile`myTile5`)))) {
+                music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
+                stage = 2
+                info.setScore(1)
+                tiles.setWallAt(tiles.getTileLocation(15, 8), false)
+            }
+        }
+    }
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile2`, function (sprite, location) {
+    game.gameOver(true)
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile5`, function (sprite, location) {
+    if (heldItem != greenBallItem && controller.A.isPressed()) {
+        greenBallItem = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . 6 6 6 6 . . . . . . 
+            . . . . 6 6 6 5 5 6 6 6 . . . . 
+            . . . 7 7 7 7 6 6 6 6 6 6 . . . 
+            . . 6 7 7 7 7 8 8 8 1 1 6 6 . . 
+            . . 7 7 7 7 7 8 8 8 1 1 5 6 . . 
+            . 6 7 7 7 7 8 8 8 8 8 5 5 6 6 . 
+            . 6 7 7 7 8 8 8 6 6 6 6 5 6 6 . 
+            . 6 6 7 7 8 8 6 6 6 6 6 6 6 6 . 
+            . 6 8 7 7 8 8 6 6 6 6 6 6 6 6 . 
+            . . 6 8 7 7 8 6 6 6 6 6 8 6 . . 
+            . . 6 8 8 7 8 8 6 6 6 8 6 6 . . 
+            . . . 6 8 8 8 8 8 8 8 8 6 . . . 
+            . . . . 6 6 8 8 8 8 6 6 . . . . 
+            . . . . . . 6 6 6 6 . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.Item)
+        PlayerHold(greenBallItem)
+        tiles.setTileAt(location, sprites.dungeon.collectibleInsignia)
+    }
+})
 function HeldItemControllerY () {
     if (player1.vy == 0) {
         heldItem.setPosition(player1.x + 10, player1.y)
@@ -368,6 +506,8 @@ let Stopped = false
 let GhostHealth: StatusBarSprite = null
 let Ghost: Sprite = null
 let ListOfEnemies: Sprite[] = []
+let greenBallItem: Sprite = null
+let redBallItem: Sprite = null
 let heldItem: Sprite = null
 let None: Sprite = null
 let Sword: Sprite = null
@@ -394,10 +534,15 @@ player1 = sprites.create(img`
     . . . f f . . f f . . . . 
     `, SpriteKind.Player)
 controller.moveSprite(player1)
-tilemapList = [tilemap`level12`, tilemap`level10`]
+tilemapList = [
+tilemap`firstlevel`,
+tilemap`level10`,
+tilemap`level0`,
+tilemap`level12`
+]
 let Tilemap = tilemap`level2`
 scene.cameraFollowSprite(player1)
-tiles.setCurrentTilemap(tilemap`level12`)
+tiles.setCurrentTilemap(tilemap`firstlevel`)
 Sword = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
@@ -435,7 +580,7 @@ None = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Item)
 heldItem = None
-let redBallItem = sprites.create(img`
+redBallItem = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . 4 4 4 4 . . . . . . 
     . . . . 4 4 4 5 5 4 4 4 . . . . 
@@ -453,6 +598,28 @@ let redBallItem = sprites.create(img`
     . . . . . . 4 4 4 4 . . . . . . 
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Item)
+greenBallItem = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . 6 6 6 6 . . . . . . 
+    . . . . 6 6 6 5 5 6 6 6 . . . . 
+    . . . 7 7 7 7 6 6 6 6 6 6 . . . 
+    . . 6 7 7 7 7 8 8 8 1 1 6 6 . . 
+    . . 7 7 7 7 7 8 8 8 1 1 5 6 . . 
+    . 6 7 7 7 7 8 8 8 8 8 5 5 6 6 . 
+    . 6 7 7 7 8 8 8 6 6 6 6 5 6 6 . 
+    . 6 6 7 7 8 8 6 6 6 6 6 6 6 6 . 
+    . 6 8 7 7 8 8 6 6 6 6 6 6 6 6 . 
+    . . 6 8 7 7 8 6 6 6 6 6 8 6 . . 
+    . . 6 8 8 7 8 8 6 6 6 8 6 6 . . 
+    . . . 6 8 8 8 8 8 8 8 8 6 . . . 
+    . . . . 6 6 8 8 8 8 6 6 . . . . 
+    . . . . . . 6 6 6 6 . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Item)
+redBallItem.setFlag(SpriteFlag.Ghost, true)
+redBallItem.setFlag(SpriteFlag.Invisible, true)
+greenBallItem.setFlag(SpriteFlag.Ghost, true)
+greenBallItem.setFlag(SpriteFlag.Invisible, true)
 info.setScore(0)
 PlayerHold(Sword)
 Make_Enemy(3)
@@ -463,23 +630,29 @@ playerHealth.value = 100
 game.onUpdate(function () {
     controller.moveSprite(heldItem, HeldItemControllerX(), HeldItemControllerY())
     ListOfItems = sprites.allOfKind(SpriteKind.Item)
-    for (let value of ListOfItems) {
-        if (player1.overlapsWith(value) && value != heldItem) {
+    for (let value2 of ListOfItems) {
+        if (player1.overlapsWith(value2) && value2 != heldItem) {
             if (!(LastAButton) && controller.A.isPressed()) {
-                PlayerHold(value)
+                PlayerHold(value2)
             }
         }
     }
     LastAButton = controller.A.isPressed()
     ListOfEnemies = sprites.allOfKind(SpriteKind.Enemy)
-    for (let value2 of ListOfEnemies) {
-        Enemy_Following(value2)
+    for (let value22 of ListOfEnemies) {
+        if (statusbars.getStatusBarAttachedTo(StatusBarKind.EnemyHealth, value22).value <= 0) {
+            sprites.destroy(value22)
+        }
+        Enemy_Following(value22)
     }
 })
 game.onUpdateInterval(1000, function () {
-    for (let value of ListOfEnemies) {
-        if (value.overlapsWith(player1)) {
+    for (let value3 of ListOfEnemies) {
+        if (value3.overlapsWith(player1)) {
             playerHealth.value += -5
         }
+    }
+    if (playerHealth.value <= 0) {
+        game.gameOver(false)
     }
 })
